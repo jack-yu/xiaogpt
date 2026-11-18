@@ -1,3 +1,14 @@
+# xiaogpt - personal fork (agent search)
+
+> **This fork is based on upstream [yihong0618/xiaogpt](https://github.com/yihong0618/xiaogpt).** Changes:
+> - **Agent Loop web search**: uses function calling over any OpenAI-compatible endpoint to call AnySearch, so the model looks up live data (fuel prices / weather / news) instead of guessing. See xiaogpt/agent_bot.py.
+> - **Dynamic date injection**: current date/time is injected into the system prompt on every request, so the model knows "today".
+> - **Anti-hallucination prompt**: instructs the model to search for real-time facts and say "I don't know" rather than invent numbers.
+> - **Shorter wait prompt**: the pre-answer TTS is shortened to a brief confirmation.
+> - **Slim Docker image**: drops unused third-party TTS dependencies (2.76GB -> 792MB).
+>
+> Config via env vars: OPENAI_BASE_URL / OPENAI_API_KEY / LLM_MODEL (any OpenAI-compatible endpoint). No secrets are committed.
+
 # xiaogpt
 
 [![PyPI](https://img.shields.io/pypi/v/xiaogpt?style=flat-square)](https://pypi.org/project/xiaogpt)
