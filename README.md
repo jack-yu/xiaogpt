@@ -5,6 +5,8 @@
 > - **Dynamic date injection**: current date/time is injected into the system prompt on every request, so the model knows "today".
 > - **Anti-hallucination prompt**: instructs the model to search for real-time facts and say "I don't know" rather than invent numbers.
 > - **Shorter wait prompt**: the pre-answer TTS is shortened to a brief confirmation.
+> - **More tools**: calculator (safe arithmetic + unit conversion), date math (intervals/age/weekday), and long-term memory (remember/forget, stored in `/config/memory.json` with a 100-item cap).
+> - **Fast path**: search-result cache (TTL 10 min, max 50 entries, memory-only) and keyword pre-detection to skip a model round; "please wait" TTS runs in parallel with the query.
 > - **Slim Docker image**: drops unused third-party TTS dependencies (2.76GB -> 792MB).
 >
 > Config via env vars: OPENAI_BASE_URL / OPENAI_API_KEY / LLM_MODEL (any OpenAI-compatible endpoint). No secrets are committed.

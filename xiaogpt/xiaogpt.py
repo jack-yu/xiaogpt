@@ -426,7 +426,25 @@ class MiGPT:
             else:
                 # waiting for xiaoai speaker done
                 await asyncio.sleep(8)
-            await self.do_tts("请稍等")
+            # 并行：后台真正启动问答（Agent Loop），同时提交"请稍等"提示音。
+            # 这样 do_tts 若偶发变慢也不会拖累查询开始；音箱等待期就已在播报。
+            if self.config.stream:
+                tts_task = asyncio.create_task(self.do_tts("请稍等"))
+                answer_stream = self.ask_gpt(query)
+                await tts_task
+            else:
+                answer_task = asyncio.create_task(
+                    self.chatbot.ask(query, **self.config.gpt_options)
+                )
+                tts_task = asyncio.create_task(self.do_tts("请稍等"))
+                await tts_task
+                _answer = await answer_task
+                _message = self._normalize(_answer) if _answer else ""
+
+                async def _single(v):
+                    yield v
+
+                answer_stream = _single(_message)
             try:
                 print(
                     "以下是小爱的回答：",
@@ -436,7 +454,7 @@ class MiGPT:
                 print("小爱没回")
             print(f"以下是 {self.chatbot.name} 的回答：", end="")
             try:
-                await self.speak(self.ask_gpt(query))
+                await self.speak(answer_stream)
             except Exception as e:
                 print(f"{self.chatbot.name} 回答出错 {str(e)}")
             else:
