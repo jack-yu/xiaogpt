@@ -8,6 +8,8 @@
 > - **Slim Docker image**: drops unused third-party TTS dependencies (2.76GB -> 792MB).
 >
 > Config via env vars: OPENAI_BASE_URL / OPENAI_API_KEY / LLM_MODEL (any OpenAI-compatible endpoint). No secrets are committed.
+>
+> **Build**: `docker build .` (self-contained). The slim Dockerfile installs `miservice==3.0.1` from PyPI and applies `patches/miservice-otp-fix.patch` to fix the OTP login failure (code 70016) caused by Xiaomi's new "confirm phone" page. The fix is from Yonsm/MiService PR #64 (merged 2026-10-15); PyPI 3.0.1 does not include it yet.
 
 # xiaogpt
 
